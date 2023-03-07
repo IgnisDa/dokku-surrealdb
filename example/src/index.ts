@@ -1,3 +1,5 @@
+/* This is just an example app, and does not have any best practices applied. */
+
 import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as logger from "koa-logger";
@@ -20,7 +22,7 @@ router.post("/create", async (ctx, next) => {
 	await db.create("person", {
 		title: faker.name.jobTitle(),
 		name: { first: faker.name.firstName(), last: faker.name.lastName() },
-		marketing: true,
+		marketing: faker.datatype.boolean(),
 		identifier: faker.internet.userName(),
 	});
 	ctx.body = { status: true };
