@@ -1,3 +1,5 @@
 /tmp
 .vagrant
 bootstrap.sh
+node_modules
+dist
