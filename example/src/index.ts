@@ -14,6 +14,7 @@ router.get("/", async (ctx, next) => {
 		user: process.env.SURREAL_USER,
 		pass: process.env.SURREAL_PASS,
 	});
+	await db.use("test", "test");
 	await db.create("person", {
 		title: "Founder & CEO",
 		name: { first: "Tobie", last: "Morgan Hitchcock" },
