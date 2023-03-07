@@ -33,11 +33,7 @@ def compile(service, version, variable, alias, image, scheme, ports, sponsors, o
 
 def header(service):
     return " ".join(
-        [
-            f"# dokku {service}",
-            f'[![Build Status](https://img.shields.io/github/actions/workflow/status/dokku/dokku-{service}/ci.yml?branch=master&style=flat-square "Build Status")](https://github.com/dokku/dokku-{service}/actions/workflows/ci.yml?query=branch%3Amaster)',
-            f'[![IRC Network](https://img.shields.io/badge/irc-libera-blue.svg?style=flat-square "IRC Libera")](https://webchat.libera.chat/?channels=dokku)',
-        ]
+        [f"# dokku {service}"]
     )
 
 
@@ -48,7 +44,7 @@ def description(service, full_image, version):
         base = "r/" + full_image.split("/")[0]
         image = full_image.split("/")[1]
 
-    return f"Official {service} plugin for dokku. Currently defaults to installing [{full_image} {version}](https://hub.docker.com/{base}/{image}/)."
+    return f"Unofficial {service} plugin for dokku. Currently defaults to installing [{full_image} {version}](https://hub.docker.com/{base}/{image}/)."
 
 
 def sponsors_section(service, sponsors):

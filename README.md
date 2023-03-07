@@ -1,6 +1,6 @@
-# dokku surrealdb [![Build Status](https://img.shields.io/github/actions/workflow/status/dokku/dokku-surrealdb/ci.yml?branch=master&style=flat-square "Build Status")](https://github.com/dokku/dokku-surrealdb/actions/workflows/ci.yml?query=branch%3Amaster) [![IRC Network](https://img.shields.io/badge/irc-libera-blue.svg?style=flat-square "IRC Libera")](https://webchat.libera.chat/?channels=dokku)
+# dokku surrealdb
 
-Official surrealdb plugin for dokku. Currently defaults to installing [surrealdb 14.5](https://hub.docker.com/_/surrealdb/).
+Unofficial surrealdb plugin for dokku. Currently defaults to installing [surrealdb/surrealdb nightly](https://hub.docker.com/r/surrealdb/surrealdb/).
 
 ## Requirements
 
@@ -17,39 +17,39 @@ sudo dokku plugin:install https://github.com/dokku/dokku-surrealdb.git surrealdb
 ## Commands
 
 ```
-surrealdb:app-links <app>                           # list all surrealdb service links for a given app
+surrealdb:app-links <app>                          # list all surrealdb service links for a given app
 surrealdb:backup <service> <bucket-name> [--use-iam] # create a backup of the surrealdb service to an existing s3 bucket
 surrealdb:backup-auth <service> <aws-access-key-id> <aws-secret-access-key> <aws-default-region> <aws-signature-version> <endpoint-url> # set up authentication for backups on the surrealdb service
-surrealdb:backup-deauth <service>                   # remove backup authentication for the surrealdb service
+surrealdb:backup-deauth <service>                  # remove backup authentication for the surrealdb service
 surrealdb:backup-schedule <service> <schedule> <bucket-name> [--use-iam] # schedule a backup of the surrealdb service
-surrealdb:backup-schedule-cat <service>             # cat the contents of the configured backup cronfile for the service
+surrealdb:backup-schedule-cat <service>            # cat the contents of the configured backup cronfile for the service
 surrealdb:backup-set-encryption <service> <passphrase> # set encryption for all future backups of surrealdb service
-surrealdb:backup-unschedule <service>               # unschedule the backup of the surrealdb service
-surrealdb:backup-unset-encryption <service>         # unset encryption for future backups of the surrealdb service
+surrealdb:backup-unschedule <service>              # unschedule the backup of the surrealdb service
+surrealdb:backup-unset-encryption <service>        # unset encryption for future backups of the surrealdb service
 surrealdb:clone <service> <new-service> [--clone-flags...] # create container <new-name> then copy data from <name> into <new-name>
-surrealdb:connect <service>                         # connect to the service via the surrealdb connection tool
-surrealdb:create <service> [--create-flags...]      # create a surrealdb service
-surrealdb:destroy <service> [-f|--force]            # delete the surrealdb service/data/container if there are no links left
-surrealdb:enter <service>                           # enter or run a command in a running surrealdb service container
-surrealdb:exists <service>                          # check if the surrealdb service exists
-surrealdb:export <service>                          # export a dump of the surrealdb service database
-surrealdb:expose <service> <ports...>               # expose a surrealdb service on custom host:port if provided (random port on the 0.0.0.0 interface if otherwise unspecified)
-surrealdb:import <service>                          # import a dump into the surrealdb service database
-surrealdb:info <service> [--single-info-flag]       # print the service information
-surrealdb:link <service> <app> [--link-flags...]    # link the surrealdb service to the app
-surrealdb:linked <service> <app>                    # check if the surrealdb service is linked to an app
-surrealdb:links <service>                           # list all apps linked to the surrealdb service
-surrealdb:list                                      # list all surrealdb services
+surrealdb:connect <service>                        # connect to the service via the surrealdb connection tool
+surrealdb:create <service> [--create-flags...]     # create a surrealdb service
+surrealdb:destroy <service> [-f|--force]           # delete the surrealdb service/data/container if there are no links left
+surrealdb:enter <service>                          # enter or run a command in a running surrealdb service container
+surrealdb:exists <service>                         # check if the surrealdb service exists
+surrealdb:export <service>                         # export a dump of the surrealdb service database
+surrealdb:expose <service> <ports...>              # expose a surrealdb service on custom host:port if provided (random port on the 0.0.0.0 interface if otherwise unspecified)
+surrealdb:import <service>                         # import a dump into the surrealdb service database
+surrealdb:info <service> [--single-info-flag]      # print the service information
+surrealdb:link <service> <app> [--link-flags...]   # link the surrealdb service to the app
+surrealdb:linked <service> <app>                   # check if the surrealdb service is linked to an app
+surrealdb:links <service>                          # list all apps linked to the surrealdb service
+surrealdb:list                                     # list all surrealdb services
 surrealdb:logs <service> [-t|--tail] <tail-num-optional> # print the most recent log(s) for this service
-surrealdb:pause <service>                           # pause a running surrealdb service
-surrealdb:promote <service> <app>                   # promote service <service> as DATABASE_URL in <app>
-surrealdb:restart <service>                         # graceful shutdown and restart of the surrealdb service container
-surrealdb:set <service> <key> <value>               # set or clear a property for a service
-surrealdb:start <service>                           # start a previously stopped surrealdb service
-surrealdb:stop <service>                            # stop a running surrealdb service
-surrealdb:unexpose <service>                        # unexpose a previously exposed surrealdb service
-surrealdb:unlink <service> <app>                    # unlink the surrealdb service from the app
-surrealdb:upgrade <service> [--upgrade-flags...]    # upgrade service <service> to the specified versions
+surrealdb:pause <service>                          # pause a running surrealdb service
+surrealdb:promote <service> <app>                  # promote service <service> as SURREAL_URL in <app>
+surrealdb:restart <service>                        # graceful shutdown and restart of the surrealdb service container
+surrealdb:set <service> <key> <value>              # set or clear a property for a service
+surrealdb:start <service>                          # start a previously stopped surrealdb service
+surrealdb:stop <service>                           # stop a running surrealdb service
+surrealdb:unexpose <service>                       # unexpose a previously exposed surrealdb service
+surrealdb:unlink <service> <app>                   # unlink the surrealdb service from the app
+surrealdb:upgrade <service> [--upgrade-flags...]   # upgrade service <service> to the specified versions
 ```
 
 ## Usage
@@ -85,10 +85,10 @@ Create a surrealdb service named lollipop:
 dokku surrealdb:create lollipop
 ```
 
-You can also specify the image and image version to use for the service. It _must_ be compatible with the surrealdb image.
+You can also specify the image and image version to use for the service. It *must* be compatible with the surrealdb/surrealdb image.
 
 ```shell
-export SURREALDB_IMAGE="surrealdb"
+export SURREALDB_IMAGE="surrealdb/surrealdb"
 export SURREALDB_IMAGE_VERSION="${PLUGIN_IMAGE_VERSION}"
 dokku surrealdb:create lollipop
 ```
@@ -98,12 +98,6 @@ You can also specify custom environment variables to start the surrealdb service
 ```shell
 export SURREALDB_CUSTOM_ENV="USER=alpha;HOST=beta"
 dokku surrealdb:create lollipop
-```
-
-Official Surrealdb "$DOCKER_BIN" image ls does not include postgis extension (amongst others). The following example creates a new surrealdb service using `postgis/postgis:13-3.1` image, which includes the `postgis` extension.
-
-```shell
-dokku surrealdb:create postgis-database --image "postgis/postgis" --image-version "13-3.1"
 ```
 
 ### print the service information
@@ -157,7 +151,7 @@ dokku surrealdb:info lollipop --version
 
 ```shell
 # usage
-dokku surrealdb:list
+dokku surrealdb:list 
 ```
 
 List all services:
@@ -220,36 +214,27 @@ The following environment variables will be set automatically by docker (not on 
 
 ```
 DOKKU_SURREALDB_LOLLIPOP_NAME=/lollipop/DATABASE
-DOKKU_SURREALDB_LOLLIPOP_PORT=tcp://172.17.0.1:5432
-DOKKU_SURREALDB_LOLLIPOP_PORT_5432_TCP=tcp://172.17.0.1:5432
-DOKKU_SURREALDB_LOLLIPOP_PORT_5432_TCP_PROTO=tcp
-DOKKU_SURREALDB_LOLLIPOP_PORT_5432_TCP_PORT=5432
-DOKKU_SURREALDB_LOLLIPOP_PORT_5432_TCP_ADDR=172.17.0.1
+DOKKU_SURREALDB_LOLLIPOP_PORT=tcp://172.17.0.1:8000
+DOKKU_SURREALDB_LOLLIPOP_PORT_8000_TCP=tcp://172.17.0.1:8000
+DOKKU_SURREALDB_LOLLIPOP_PORT_8000_TCP_PROTO=tcp
+DOKKU_SURREALDB_LOLLIPOP_PORT_8000_TCP_PORT=8000
+DOKKU_SURREALDB_LOLLIPOP_PORT_8000_TCP_ADDR=172.17.0.1
 ```
 
 The following will be set on the linked application by default:
 
 ```
-DATABASE_URL=surrealdb://lollipop:SOME_PASSWORD@dokku-surrealdb-lollipop:5432/lollipop
+SURREAL_URL=dokku-surrealdb-lollipop:8000
+SURREAL_USER=SOME_USER
+SURREAL_PASS=SOME_PASSWORD
 ```
+
+> NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/d29929514db7bb63ea4e32816626df26efdcba02/example/src/index.ts#L11) app present in the repository.
 
 The host exposed here only works internally in docker containers. If you want your container to be reachable from outside, you should use the `expose` subcommand. Another service can be linked to your app:
 
 ```shell
 dokku surrealdb:link other_service playground
-```
-
-It is possible to change the protocol for `DATABASE_URL` by setting the environment variable `SURREALDB_DATABASE_SCHEME` on the app. Doing so will after linking will cause the plugin to think the service is not linked, and we advise you to unlink before proceeding.
-
-```shell
-dokku config:set playground SURREALDB_DATABASE_SCHEME=surrealdb2
-dokku surrealdb:link lollipop playground
-```
-
-This will cause `DATABASE_URL` to be set as:
-
-```
-surrealdb2://lollipop:SOME_PASSWORD@dokku-surrealdb-lollipop:5432/lollipop
 ```
 
 ### unlink the surrealdb service from the app
@@ -346,13 +331,13 @@ dokku surrealdb:expose <service> <ports...>
 Expose the service on the service's normal ports, allowing access to it from the public interface (`0.0.0.0`):
 
 ```shell
-dokku surrealdb:expose lollipop 5432
+dokku surrealdb:expose lollipop 8000
 ```
 
 Expose the service on the service's normal ports, with the first on a specified ip adddress (127.0.0.1):
 
 ```shell
-dokku surrealdb:expose lollipop 127.0.0.1:5432
+dokku surrealdb:expose lollipop 127.0.0.1:8000
 ```
 
 ### unexpose a previously exposed surrealdb service
@@ -368,7 +353,7 @@ Unexpose the service, removing access to it from the public interface (`0.0.0.0`
 dokku surrealdb:unexpose lollipop
 ```
 
-### promote service <service> as DATABASE_URL in <app>
+### promote service <service> as SURREAL_URL in <app>
 
 ```shell
 # usage
@@ -378,7 +363,7 @@ dokku surrealdb:promote <service> <app>
 If you have a surrealdb service linked to an app and try to link another surrealdb service another link environment variable will be generated automatically:
 
 ```
-DOKKU_DATABASE_BLUE_URL=surrealdb://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:5432/other_service
+DOKKU_SURREAL_BLUE_URL=http://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:8000/other_service
 ```
 
 You can promote the new service to be the primary one:
@@ -389,12 +374,12 @@ You can promote the new service to be the primary one:
 dokku surrealdb:promote other_service playground
 ```
 
-This will replace `DATABASE_URL` with the url from other_service and generate another environment variable to hold the previous value if necessary. You could end up with the following for example:
+This will replace `SURREAL_URL` with the url from other_service and generate another environment variable to hold the previous value if necessary. You could end up with the following for example:
 
 ```
-DATABASE_URL=surrealdb://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:5432/other_service
-DOKKU_DATABASE_BLUE_URL=surrealdb://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:5432/other_service
-DOKKU_DATABASE_SILVER_URL=surrealdb://lollipop:SOME_PASSWORD@dokku-surrealdb-lollipop:5432/lollipop
+SURREAL_URL=http://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:8000/other_service
+DOKKU_SURREAL_BLUE_URL=http://other_service:ANOTHER_PASSWORD@dokku-surrealdb-other-service:8000/other_service
+DOKKU_SURREAL_SILVER_URL=http://lollipop:SOME_PASSWORD@dokku-surrealdb-lollipop:8000/lollipop
 ```
 
 ### start a previously stopped surrealdb service
@@ -744,7 +729,7 @@ flags:
 
 Schedule a backup:
 
-> 'schedule' is a crontab expression, eg. "0 3 \* \* \*" for each day at 3am
+> 'schedule' is a crontab expression, eg. "0 3 * * *" for each day at 3am
 
 ```shell
 dokku surrealdb:backup-schedule lollipop "0 3 * * *" my-s3-bucket

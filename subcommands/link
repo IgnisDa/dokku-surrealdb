@@ -23,21 +23,16 @@ service-link-cmd() {
   #E
   #E the following will be set on the linked application by default:
   #E
-  #E     ${PLUGIN_DEFAULT_ALIAS}_URL=${PLUGIN_SCHEME}://lollipop:SOME_PASSWORD@dokku-${PLUGIN_COMMAND_PREFIX}-lollipop:${PLUGIN_DATASTORE_PORTS[0]}/lollipop
+  #E     ${PLUGIN_DEFAULT_ALIAS}_URL=dokku-${PLUGIN_COMMAND_PREFIX}-lollipop:${PLUGIN_DATASTORE_PORTS[0]}
+  #E     ${PLUGIN_DEFAULT_ALIAS}_USER=SOME_USER
+  #E     ${PLUGIN_DEFAULT_ALIAS}_PASS=SOME_PASSWORD
+  #E
+  #E > NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/d29929514db7bb63ea4e32816626df26efdcba02/example/src/index.ts#L11) app present in the repository.
   #E
   #E the host exposed here only works internally in docker containers.
   #E if you want your container to be reachable from outside, you should
   #E use the 'expose' subcommand. another service can be linked to your app:
   #E dokku $PLUGIN_COMMAND_PREFIX:link other_service playground
-  #E it is possible to change the protocol for ${PLUGIN_DEFAULT_ALIAS}_URL by setting the
-  #E environment variable ${PLUGIN_VARIABLE}_DATABASE_SCHEME on the app. doing so will
-  #E after linking will cause the plugin to think the service is not
-  #E linked, and we advise you to unlink before proceeding.
-  #E dokku config:set playground ${PLUGIN_VARIABLE}_DATABASE_SCHEME=${PLUGIN_SCHEME}2
-  #E dokku $PLUGIN_COMMAND_PREFIX:link lollipop playground
-  #E this will cause ${PLUGIN_DEFAULT_ALIAS}_URL to be set as:
-  #E
-  #E     ${PLUGIN_SCHEME}2://lollipop:SOME_PASSWORD@dokku-${PLUGIN_COMMAND_PREFIX}-lollipop:${PLUGIN_DATASTORE_PORTS[0]}/lollipop
   #A service, service to run command against
   #A app, app to run command against
   #F -a|--alias "BLUE_DATABASE", an alternative alias to use for linking to an app via environment variable
