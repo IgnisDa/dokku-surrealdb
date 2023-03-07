@@ -89,7 +89,7 @@ service_create_container() {
   DOCKER_ARGS=()
   DOCKER_ARGS+=("--cidfile=$SERVICE_ROOT/ID")
   DOCKER_ARGS+=("--env-file=$SERVICE_ROOT/ENV")
-  DOCKER_ARGS+=("--env=DB_PATHfile:///data/database.db")
+  DOCKER_ARGS+=("--env=DB_PATH=file:///data/database.db")
   DOCKER_ARGS+=("--env=PASS=$PASSWORD")
   DOCKER_ARGS+=("--env=USER=$USER")
   DOCKER_ARGS+=("--env=NO_BANNER=1")
