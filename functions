@@ -146,13 +146,6 @@ service_create_container() {
     return 1
   fi
 
-  # dokku_log_verbose_quiet "Creating container database"
-  # "$DOCKER_BIN" container exec "$SERVICE_NAME" su - surrealdb -c "createdb -E utf8 $DATABASE_NAME" 2>/dev/null || dokku_log_verbose_quiet 'Already exists'
-
-  dokku_log_verbose_quiet "Securing connection to database"
-  service_pause "$SERVICE" >/dev/null
-  "$DOCKER_BIN" container run --rm -i -v "$SERVICE_HOST_ROOT/data:/var/lib/surrealdb/data" "$PLUGIN_IMAGE:$PLUGIN_IMAGE_VERSION" bash -s <"$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/enable_ssl.sh" &>/dev/null
-
   suppress_output "$DOCKER_BIN" container start "$(cat "$SERVICE_ROOT/ID")"
   service_port_reconcile_status "$SERVICE"
 
