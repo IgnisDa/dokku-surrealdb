@@ -599,6 +599,8 @@ service_link() {
   local SERVICE_URL=$(service_url "$SERVICE")
   local SERVICE_NAME="$(get_service_name "$SERVICE")"
   local SERVICE_ROOT="$PLUGIN_DATA_ROOT/$SERVICE"
+  local USER="$(service_user "$SERVICE")"
+  local PASSWORD="$(service_password "$SERVICE")"
   local EXISTING_CONFIG=$(config_all "$APP")
   local LINK=$(echo "$EXISTING_CONFIG" | grep "$SERVICE_URL" | cut -d: -f1) || true
   local SERVICE_DNS_HOSTNAME=$(service_dns_hostname "$SERVICE")
@@ -632,10 +634,10 @@ service_link() {
   [[ -n "$SERVICE_QUERYSTRING" ]] && SERVICE_URL="${SERVICE_URL}?${SERVICE_QUERYSTRING}"
   plugn trigger service-action post-link "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
   if [[ "$DOKKU_GLOBAL_FLAGS" == *"--no-restart"* ]] || [[ "$SERVICE_RESTART_APPS" == "false" ]]; then
-    config_set --no-restart "$APP" "${ALIAS}_URL=$SERVICE_URL"
+    config_set --no-restart "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASSWORD=$PASSWORD"
     dokku_log_verbose "Skipping restart of linked app"
   else
-    config_set "$APP" "${ALIAS}_URL=$SERVICE_URL"
+    config_set "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASSWORD=$PASSWORD"
   fi
   plugn trigger service-action post-link-complete "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
 }
@@ -707,82 +709,82 @@ service_parse_args() {
   for arg in "$@"; do
     shift
     case "$arg" in
-      "--alias") set -- "$@" "-a" ;;
-      "--config-options") set -- "$@" "-c" ;;
-      "--custom-env") set -- "$@" "-C" ;;
-      "--database") set -- "$@" "-d" ;;
-      "--image-version") set -- "$@" "-I" ;;
-      "--initial-network") set -- "$@" "-N" ;;
-      "--image") set -- "$@" "-i" ;;
-      "--memory") set -- "$@" "-m" ;;
-      "--no-restart") set -- "$@" "-n" ;;
-      "--password") set -- "$@" "-p" ;;
-      "--post-create-network") set -- "$@" "-P" ;;
-      "--post-start-network") set -- "$@" "-S" ;;
-      "--querystring") set -- "$@" "-q" ;;
-      "--restart-apps") set -- "$@" "-R" ;;
-      "--root-password") set -- "$@" "-r" ;;
-      "--shm-size") set -- "$@" "-s" ;;
-      "--user") set -- "$@" "-u" ;;
-      *) set -- "$@" "$arg" ;;
+    "--alias") set -- "$@" "-a" ;;
+    "--config-options") set -- "$@" "-c" ;;
+    "--custom-env") set -- "$@" "-C" ;;
+    "--database") set -- "$@" "-d" ;;
+    "--image-version") set -- "$@" "-I" ;;
+    "--initial-network") set -- "$@" "-N" ;;
+    "--image") set -- "$@" "-i" ;;
+    "--memory") set -- "$@" "-m" ;;
+    "--no-restart") set -- "$@" "-n" ;;
+    "--password") set -- "$@" "-p" ;;
+    "--post-create-network") set -- "$@" "-P" ;;
+    "--post-start-network") set -- "$@" "-S" ;;
+    "--querystring") set -- "$@" "-q" ;;
+    "--restart-apps") set -- "$@" "-R" ;;
+    "--root-password") set -- "$@" "-r" ;;
+    "--shm-size") set -- "$@" "-s" ;;
+    "--user") set -- "$@" "-u" ;;
+    *) set -- "$@" "$arg" ;;
     esac
   done
 
   OPTIND=1
   while getopts "na:c:C:d:i:I:m:n:N:p:P:q:R:r:s:S:u:" opt; do
     case "$opt" in
-      a)
-        SERVICE_ALIAS="${OPTARG^^}"
-        export SERVICE_ALIAS="${SERVICE_ALIAS%_URL}"
-        ;;
-      c)
-        export PLUGIN_CONFIG_OPTIONS=$OPTARG
-        ;;
-      C)
-        export SERVICE_CUSTOM_ENV=$OPTARG
-        ;;
-      d)
-        export SERVICE_DATABASE=$OPTARG
-        ;;
-      i)
-        export PLUGIN_IMAGE=$OPTARG
-        ;;
-      I)
-        export PLUGIN_IMAGE_VERSION=$OPTARG
-        ;;
-      m)
-        export SERVICE_MEMORY=$OPTARG
-        ;;
-      n)
-        export SERVICE_RESTART_APPS=false
-        ;;
-      N)
-        export SERVICE_INITIAL_NETWORK=$OPTARG
-        ;;
-      p)
-        export SERVICE_PASSWORD=$OPTARG
-        ;;
-      P)
-        export SERVICE_POST_CREATE_NETWORK=$OPTARG
-        ;;
-      q)
-        export SERVICE_QUERYSTRING=${OPTARG#"?"}
-        ;;
-      R)
-        export SERVICE_RESTART_APPS=$OPTARG
-        ;;
-      r)
-        export SERVICE_ROOT_PASSWORD=$OPTARG
-        ;;
-      s)
-        export SERVICE_SHM_SIZE=$OPTARG
-        ;;
-      S)
-        export SERVICE_POST_START_NETWORK=$OPTARG
-        ;;
-      u)
-        export SERVICE_USER=$OPTARG
-        ;;
+    a)
+      SERVICE_ALIAS="${OPTARG^^}"
+      export SERVICE_ALIAS="${SERVICE_ALIAS%_URL}"
+      ;;
+    c)
+      export PLUGIN_CONFIG_OPTIONS=$OPTARG
+      ;;
+    C)
+      export SERVICE_CUSTOM_ENV=$OPTARG
+      ;;
+    d)
+      export SERVICE_DATABASE=$OPTARG
+      ;;
+    i)
+      export PLUGIN_IMAGE=$OPTARG
+      ;;
+    I)
+      export PLUGIN_IMAGE_VERSION=$OPTARG
+      ;;
+    m)
+      export SERVICE_MEMORY=$OPTARG
+      ;;
+    n)
+      export SERVICE_RESTART_APPS=false
+      ;;
+    N)
+      export SERVICE_INITIAL_NETWORK=$OPTARG
+      ;;
+    p)
+      export SERVICE_PASSWORD=$OPTARG
+      ;;
+    P)
+      export SERVICE_POST_CREATE_NETWORK=$OPTARG
+      ;;
+    q)
+      export SERVICE_QUERYSTRING=${OPTARG#"?"}
+      ;;
+    R)
+      export SERVICE_RESTART_APPS=$OPTARG
+      ;;
+    r)
+      export SERVICE_ROOT_PASSWORD=$OPTARG
+      ;;
+    s)
+      export SERVICE_SHM_SIZE=$OPTARG
+      ;;
+    S)
+      export SERVICE_POST_START_NETWORK=$OPTARG
+      ;;
+    u)
+      export SERVICE_USER=$OPTARG
+      ;;
     esac
   done
   shift "$((OPTIND - 1))" # remove options from positional parameters
@@ -795,6 +797,16 @@ service_password() {
   local PASSWORD_FILE="$SERVICE_ROOT/PASSWORD"
   if [[ -f "$PASSWORD_FILE" ]]; then
     cat "$PASSWORD_FILE"
+  fi
+}
+
+service_user() {
+  declare desc="fetch the user for a service"
+  declare SERVICE="$1"
+  local SERVICE_ROOT="$PLUGIN_DATA_ROOT/$SERVICE"
+  local USER_FILE="$SERVICE_ROOT/USER"
+  if [[ -f "$USER_FILE" ]]; then
+    cat "$USER_FILE"
   fi
 }
 
@@ -978,10 +990,10 @@ service_unlink() {
   [[ -z ${LINK[*]} ]] && dokku_log_fail "Not linked to app $APP"
   plugn trigger service-action post-unlink "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
   if [[ "$DOKKU_GLOBAL_FLAGS" == *"--no-restart"* ]] || [[ "$SERVICE_RESTART_APPS" == "false" ]]; then
-    config_unset --no-restart "$APP" "${LINK[@]}"
+    config_unset --no-restart "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASSWORD"
     dokku_log_verbose "Skipping restart of linked app"
   else
-    config_unset "$APP" "${LINK[@]}"
+    config_unset "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASSWORD"
   fi
   plugn trigger service-action post-unlink-complete "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
 }

@@ -46,13 +46,20 @@ service_create() {
   mkdir -p "$SERVICE_ROOT/data" || dokku_log_fail "Unable to create service data directory"
   touch "$LINKS_FILE"
 
-  PASSWORD=$(openssl rand -hex 16)
+  PASSWORD=$(openssl rand -hex 32)
   if [[ -n "$SERVICE_PASSWORD" ]]; then
     PASSWORD="$SERVICE_PASSWORD"
     dokku_log_warn "Specified password may not be as secure as the auto-generated password"
   fi
   echo "$PASSWORD" >"$SERVICE_ROOT/PASSWORD"
   chmod 640 "$SERVICE_ROOT/PASSWORD"
+
+  USER=$(openssl rand -hex 16)
+  if [[ -n "$SERVICE_USER" ]]; then
+    USER="$SERVICE_USER"
+  fi
+  echo "$USER" >"$SERVICE_ROOT/USER"
+  chmod 640 "$SERVICE_ROOT/USER"
 
   service_commit_config "$SERVICE"
   write_database_name "$SERVICE"
@@ -67,6 +74,7 @@ service_create_container() {
   local SERVICE_HOST_ROOT="$PLUGIN_DATA_HOST_ROOT/$SERVICE"
   local SERVICE_NAME="$(get_service_name "$SERVICE")"
   local PASSWORD="$(service_password "$SERVICE")"
+  local USER="$(service_user "$SERVICE")"
   local DATABASE_NAME="$(get_database_name "$SERVICE")"
   local PREVIOUS_ID
 
@@ -83,7 +91,7 @@ service_create_container() {
   DOCKER_ARGS+=("--env-file=$SERVICE_ROOT/ENV")
   DOCKER_ARGS+=("--env=DB_PATHfile:///data/database.db")
   DOCKER_ARGS+=("--env=PASS=$PASSWORD")
-  DOCKER_ARGS+=("--env=USER=root")
+  DOCKER_ARGS+=("--env=USER=$USER")
   DOCKER_ARGS+=("--env=NO_BANNER=1")
   DOCKER_ARGS+=("--hostname=$SERVICE_NAME")
   DOCKER_ARGS+=("--label=dokku.service=$PLUGIN_COMMAND_PREFIX")
@@ -222,5 +230,5 @@ service_url() {
   local SERVICE="$1"
   local SERVICE_DNS_HOSTNAME="$(service_dns_hostname "$SERVICE")"
   local PASSWORD="$(service_password "$SERVICE")"
-  echo "$PLUGIN_SCHEME://$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}"
+  echo "$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}"
 }
