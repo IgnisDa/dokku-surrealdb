@@ -3,12 +3,22 @@ import * as Router from "koa-router";
 import * as logger from "koa-logger";
 import * as json from "koa-json";
 import * as bodyParser from "koa-bodyparser";
+import Surreal from "surrealdb.js";
 
 const app = new Koa();
 const router = new Router();
+const db = new Surreal(`${process.env.DATABASE_URL}/rpc`);
 
 router.get("/", async (ctx, next) => {
-	ctx.body = { message: "Hello world" };
+	await db.signin({ user: "root", pass: "root" });
+	await db.create("person", {
+		title: "Founder & CEO",
+		name: { first: "Tobie", last: "Morgan Hitchcock" },
+		marketing: true,
+		identifier: Math.random().toString(36).substr(2, 10),
+	});
+	const people = await db.select("person");
+	ctx.body = { message: "Hello world", people };
 	await next();
 });
 
