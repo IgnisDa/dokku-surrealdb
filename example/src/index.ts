@@ -10,7 +10,7 @@ import { faker } from "@faker-js/faker";
 
 const config = {
 	app: { port: process.env.PORT || 3000 },
-	SURREAL: {
+	surreal: {
 		url: process.env.SURREAL_URL || "localhost:8000",
 		user: process.env.SURREAL_USER || "admin",
 		pass: process.env.SURREAL_PASS || "password",
@@ -20,11 +20,11 @@ const config = {
 const app = new Koa();
 const router = new Router();
 
-const db = new Surreal(`http://${config.SURREAL.url}/rpc`);
+const db = new Surreal(`http://${config.surreal.url}/rpc`);
 
 router.get("/", async (ctx, next) => {
 	const people = await db.select("person");
-	ctx.body = { message: "Hello world", people };
+	ctx.body = people;
 	await next();
 });
 
@@ -48,8 +48,8 @@ app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(config.app.port, async () => {
 	await db.signin({
-		user: config.SURREAL.user,
-		pass: config.SURREAL.pass,
+		user: config.surreal.user,
+		pass: config.surreal.pass,
 	});
 	await db.use("test", "test");
 	console.info("SurrealDB connected");
