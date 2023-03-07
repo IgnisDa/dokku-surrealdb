@@ -4,25 +4,26 @@ import * as logger from "koa-logger";
 import * as json from "koa-json";
 import * as bodyParser from "koa-bodyparser";
 import Surreal from "surrealdb.js";
+import { faker } from "@faker-js/faker";
 
 const app = new Koa();
 const router = new Router();
 const db = new Surreal(`http://${process.env.SURREAL_URL}/rpc`);
 
 router.get("/", async (ctx, next) => {
-	await db.signin({
-		user: process.env.SURREAL_USER,
-		pass: process.env.SURREAL_PASS,
-	});
-	await db.use("test", "test");
-	await db.create("person", {
-		title: "Founder & CEO",
-		name: { first: "Tobie", last: "Morgan Hitchcock" },
-		marketing: true,
-		identifier: Math.random().toString(36).substr(2, 10),
-	});
 	const people = await db.select("person");
 	ctx.body = { message: "Hello world", people };
+	await next();
+});
+
+router.post("/create", async (ctx, next) => {
+	await db.create("person", {
+		title: faker.name.jobTitle(),
+		name: { first: faker.name.firstName(), last: faker.name.lastName() },
+		marketing: true,
+		identifier: faker.internet.userName(),
+	});
+	ctx.body = { status: true };
 	await next();
 });
 
@@ -33,6 +34,11 @@ app.use(bodyParser());
 // Routes
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, async () => {
 	console.log("Koa started");
+	await db.signin({
+		user: process.env.SURREAL_USER,
+		pass: process.env.SURREAL_PASS,
+	});
+	await db.use("test", "test");
 });

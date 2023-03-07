@@ -8,6 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
