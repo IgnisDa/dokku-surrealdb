@@ -1,0 +1,1 @@
+FROM surrealdb/surrealdb:nightly
