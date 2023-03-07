@@ -8,9 +8,19 @@ import * as bodyParser from "koa-bodyparser";
 import Surreal from "surrealdb.js";
 import { faker } from "@faker-js/faker";
 
+const config = {
+	app: { port: process.env.PORT || 3000 },
+	SURREAL: {
+		url: process.env.SURREAL_URL || "localhost:8000",
+		user: process.env.SURREAL_USER || "admin",
+		pass: process.env.SURREAL_PASS || "password",
+	},
+} as const;
+
 const app = new Koa();
 const router = new Router();
-const db = new Surreal(`http://${process.env.SURREAL_URL}/rpc`);
+
+const db = new Surreal(`http://${config.SURREAL.url}/rpc`);
 
 router.get("/", async (ctx, next) => {
 	const people = await db.select("person");
@@ -36,11 +46,12 @@ app.use(bodyParser());
 // Routes
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(process.env.PORT, async () => {
-	console.log("Koa started");
+app.listen(config.app.port, async () => {
 	await db.signin({
-		user: process.env.SURREAL_USER,
-		pass: process.env.SURREAL_PASS,
+		user: config.SURREAL.user,
+		pass: config.SURREAL.pass,
 	});
 	await db.use("test", "test");
+	console.info("SurrealDB connected");
+	console.log(`Koa started on port ${config.app.port}`);
 });
