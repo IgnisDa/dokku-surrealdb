@@ -7,10 +7,13 @@ import Surreal from "surrealdb.js";
 
 const app = new Koa();
 const router = new Router();
-const db = new Surreal(`${process.env.DATABASE_URL}/rpc`);
+const db = new Surreal(`http://${process.env.SURREAL_URL}/rpc`);
 
 router.get("/", async (ctx, next) => {
-	await db.signin({ user: "root", pass: "root" });
+	await db.signin({
+		user: process.env.SURREAL_USER,
+		pass: process.env.SURREAL_PASS,
+	});
 	await db.create("person", {
 		title: "Founder & CEO",
 		name: { first: "Tobie", last: "Morgan Hitchcock" },
