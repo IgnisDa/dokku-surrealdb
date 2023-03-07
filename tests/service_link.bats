@@ -62,13 +62,13 @@ teardown() {
   echo "status: $status"
   url=$(dokku config:get my-app DATABASE_URL)
   password="$(sudo cat "$PLUGIN_DATA_ROOT/ls/PASSWORD")"
-  assert_contains "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-ls:5432/ls"
+  assert_contains "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-ls:8000/ls"
   assert_success
   dokku "$PLUGIN_COMMAND_PREFIX:unlink" ls my-app
 }
 
 @test "($PLUGIN_COMMAND_PREFIX:link) generates an alternate config url when DATABASE_URL already in use" {
-  dokku config:set my-app DATABASE_URL=surrealdb://user:pass@host:5432/db
+  dokku config:set my-app DATABASE_URL=surrealdb://user:pass@host:8000/db
   dokku "$PLUGIN_COMMAND_PREFIX:link" ls my-app
   run dokku config my-app
   assert_contains "${lines[*]}" "DOKKU_SURREALDB_AQUA_URL"
@@ -95,7 +95,7 @@ teardown() {
   dokku "$PLUGIN_COMMAND_PREFIX:link" ls my-app
   url=$(dokku config:get my-app DATABASE_URL)
   password="$(sudo cat "$PLUGIN_DATA_ROOT/ls/PASSWORD")"
-  assert_contains "$url" "surrealdb2://surrealdb:$password@dokku-surrealdb-ls:5432/ls"
+  assert_contains "$url" "surrealdb2://surrealdb:$password@dokku-surrealdb-ls:8000/ls"
   assert_success
   dokku "$PLUGIN_COMMAND_PREFIX:unlink" ls my-app
 }
@@ -112,7 +112,7 @@ teardown() {
   dokku "$PLUGIN_COMMAND_PREFIX:link" ls my-app --alias "ALIAS"
   url=$(dokku config:get my-app ALIAS_URL)
   password="$(sudo cat "$PLUGIN_DATA_ROOT/ls/PASSWORD")"
-  assert_contains "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-ls:5432/ls"
+  assert_contains "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-ls:8000/ls"
   assert_success
   dokku "$PLUGIN_COMMAND_PREFIX:unlink" ls my-app
 }

@@ -40,23 +40,23 @@ teardown() {
 
 @test "($PLUGIN_COMMAND_PREFIX:promote) changes DATABASE_URL" {
   password="$(sudo cat "$PLUGIN_DATA_ROOT/l/PASSWORD")"
-  dokku config:set my-app "DATABASE_URL=surrealdb://u:p@host:5432/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb://surrealdb:$password@dokku-surrealdb-l:5432/l"
+  dokku config:set my-app "DATABASE_URL=surrealdb://u:p@host:8000/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb://surrealdb:$password@dokku-surrealdb-l:8000/l"
   dokku "$PLUGIN_COMMAND_PREFIX:promote" l my-app
   url=$(dokku config:get my-app DATABASE_URL)
-  assert_equal "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-l:5432/l"
+  assert_equal "$url" "surrealdb://surrealdb:$password@dokku-surrealdb-l:8000/l"
 }
 
 @test "($PLUGIN_COMMAND_PREFIX:promote) creates new config url when needed" {
   password="$(sudo cat "$PLUGIN_DATA_ROOT/l/PASSWORD")"
-  dokku config:set my-app "DATABASE_URL=surrealdb://u:p@host:5432/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb://surrealdb:$password@dokku-surrealdb-l:5432/l"
+  dokku config:set my-app "DATABASE_URL=surrealdb://u:p@host:8000/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb://surrealdb:$password@dokku-surrealdb-l:8000/l"
   dokku "$PLUGIN_COMMAND_PREFIX:promote" l my-app
   run dokku config my-app
   assert_contains "${lines[*]}" "DOKKU_SURREALDB_"
 }
 @test "($PLUGIN_COMMAND_PREFIX:promote) uses SURREALDB_DATABASE_SCHEME variable" {
   password="$(sudo cat "$PLUGIN_DATA_ROOT/l/PASSWORD")"
-  dokku config:set my-app "SURREALDB_DATABASE_SCHEME=surrealdb2" "DATABASE_URL=surrealdb://u:p@host:5432/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb2://surrealdb:$password@dokku-surrealdb-l:5432/l"
+  dokku config:set my-app "SURREALDB_DATABASE_SCHEME=surrealdb2" "DATABASE_URL=surrealdb://u:p@host:8000/db" "DOKKU_SURREALDB_BLUE_URL=surrealdb2://surrealdb:$password@dokku-surrealdb-l:8000/l"
   dokku "$PLUGIN_COMMAND_PREFIX:promote" l my-app
   url=$(dokku config:get my-app DATABASE_URL)
-  assert_contains "$url" "surrealdb2://surrealdb:$password@dokku-surrealdb-l:5432/l"
+  assert_contains "$url" "surrealdb2://surrealdb:$password@dokku-surrealdb-l:8000/l"
 }

@@ -62,5 +62,5 @@ teardown() {
   echo "output: $output"
   echo "status: $status"
   assert_success
-  assert_contains "${lines[*]}" "exposed on port(s) [container->host]: 5432->4242"
+  assert_contains "${lines[*]}" "exposed on port(s) [container->host]: 8000->4242"
 }
