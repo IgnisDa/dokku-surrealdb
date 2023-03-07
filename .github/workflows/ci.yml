@@ -5,38 +5,36 @@ name: CI
 on:
   pull_request:
     branches:
-      - '*'
+      - "*"
   push:
     branches:
-      - master
-
-concurrency:
-  group: build-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+      - main
 
 jobs:
-  unit-tests-master:
+  unit-tests-main:
     name: unit-tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: true
     env:
       DOKKU_VERSION: master
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v2
         with:
-          python-version: '3.7.x'
+          python-version: "3.7.x"
 
       - run: make setup
 
       - run: sudo sysctl -w vm.max_map_count=262144
 
       - run: |
-          git fetch -q origin master
-          changed=$(git --no-pager diff --name-only $GITHUB_SHA..origin/master)
+          git fetch -q origin main
+          changed=$(git --no-pager diff --name-only $GITHUB_SHA..origin/main)
           if [ $changed = "Dockerfile" ]; then
             echo "Please run 'make generate' to update the image version in the README.md"
           else
@@ -48,10 +46,8 @@ jobs:
               exit 1
             fi
           fi
-
       - run: make test
-
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: tmp/test-results
@@ -59,26 +55,28 @@ jobs:
 
   unit-tests-0_19_0:
     name: unit-tests-0.19.0
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: true
     env:
       DOKKU_TAG: v0.19.0
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v2
         with:
-          python-version: '3.7.x'
+          python-version: "3.7.x"
 
       - run: make setup
 
       - run: sudo sysctl -w vm.max_map_count=262144
 
       - run: |
-          git fetch -q origin master
-          changed=$(git --no-pager diff --name-only $GITHUB_SHA..origin/master)
+          git fetch -q origin main
+          changed=$(git --no-pager diff --name-only $GITHUB_SHA..origin/main)
           if [ $changed = "Dockerfile" ]; then
             echo "Please run 'make generate' to update the image version in the README.md"
           else
@@ -90,10 +88,8 @@ jobs:
               exit 1
             fi
           fi
-
       - run: make test
-
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: tmp/test-results
