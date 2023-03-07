@@ -229,7 +229,7 @@ SURREAL_USER=SOME_USER
 SURREAL_PASS=SOME_PASSWORD
 ```
 
-> NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/d29929514db7bb63ea4e32816626df26efdcba02/example/src/index.ts#L11) app present in the repository.
+> NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/392a858abf639599718a88303edfa769aba9b194/example/src/index.ts#L23) app present in the repository.
 
 The host exposed here only works internally in docker containers. If you want your container to be reachable from outside, you should use the `expose` subcommand. Another service can be linked to your app:
 

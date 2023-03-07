@@ -27,7 +27,7 @@ service-link-cmd() {
   #E     ${PLUGIN_DEFAULT_ALIAS}_USER=SOME_USER
   #E     ${PLUGIN_DEFAULT_ALIAS}_PASS=SOME_PASSWORD
   #E
-  #E > NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/d29929514db7bb63ea4e32816626df26efdcba02/example/src/index.ts#L11) app present in the repository.
+  #E > NOTE: Since surrealdb can be connected to using multiple schemes, it is not a part of the config url set. Instead you have to specify it manually while connecting to the database. You can find a sample in the [example](https://github.com/IgnisDa/dokku-surrealdb/blob/392a858abf639599718a88303edfa769aba9b194/example/src/index.ts#L23) app present in the repository.
   #E
   #E the host exposed here only works internally in docker containers.
   #E if you want your container to be reachable from outside, you should
