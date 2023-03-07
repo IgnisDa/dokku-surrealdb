@@ -81,13 +81,15 @@ service_create_container() {
   DOCKER_ARGS=()
   DOCKER_ARGS+=("--cidfile=$SERVICE_ROOT/ID")
   DOCKER_ARGS+=("--env-file=$SERVICE_ROOT/ENV")
-  DOCKER_ARGS+=("--env=SURREALDB_PASSWORD=$PASSWORD")
+  DOCKER_ARGS+=("--env=DB_PATHfile:///data/database.db")
+  DOCKER_ARGS+=("--env=PASS=$PASSWORD")
+  DOCKER_ARGS+=("--env=USER=root")
   DOCKER_ARGS+=("--hostname=$SERVICE_NAME")
   DOCKER_ARGS+=("--label=dokku.service=$PLUGIN_COMMAND_PREFIX")
   DOCKER_ARGS+=("--label=dokku=service")
   DOCKER_ARGS+=("--name=$SERVICE_NAME")
   DOCKER_ARGS+=("--restart=always")
-  DOCKER_ARGS+=("--volume=$SERVICE_HOST_ROOT/data:/var/lib/surrealdbql/data")
+  DOCKER_ARGS+=("--volume=$SERVICE_HOST_ROOT/data:/var/lib/surrealdb/data")
 
   declare -a LINK_CONTAINER_DOCKER_ARGS
   LINK_CONTAINER_DOCKER_ARGS=()
@@ -115,7 +117,7 @@ service_create_container() {
     LINK_CONTAINER_DOCKER_ARGS+=("--network=${network}")
   fi
 
-  #
+  DOCKER_ARGS+=("start")
 
   # shellcheck disable=SC2086
   suppress_output "$DOCKER_BIN" container create "${DOCKER_ARGS[@]}" "$PLUGIN_IMAGE:$PLUGIN_IMAGE_VERSION" $CONFIG_OPTIONS
@@ -146,12 +148,12 @@ service_create_container() {
     return 1
   fi
 
-  dokku_log_verbose_quiet "Creating container database"
-  "$DOCKER_BIN" container exec "$SERVICE_NAME" su - surrealdb -c "createdb -E utf8 $DATABASE_NAME" 2>/dev/null || dokku_log_verbose_quiet 'Already exists'
+  # dokku_log_verbose_quiet "Creating container database"
+  # "$DOCKER_BIN" container exec "$SERVICE_NAME" su - surrealdb -c "createdb -E utf8 $DATABASE_NAME" 2>/dev/null || dokku_log_verbose_quiet 'Already exists'
 
   dokku_log_verbose_quiet "Securing connection to database"
   service_pause "$SERVICE" >/dev/null
-  "$DOCKER_BIN" container run --rm -i -v "$SERVICE_HOST_ROOT/data:/var/lib/surrealdbql/data" "$PLUGIN_IMAGE:$PLUGIN_IMAGE_VERSION" bash -s <"$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/enable_ssl.sh" &>/dev/null
+  "$DOCKER_BIN" container run --rm -i -v "$SERVICE_HOST_ROOT/data:/var/lib/surrealdb/data" "$PLUGIN_IMAGE:$PLUGIN_IMAGE_VERSION" bash -s <"$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/enable_ssl.sh" &>/dev/null
 
   suppress_output "$DOCKER_BIN" container start "$(cat "$SERVICE_ROOT/ID")"
   service_port_reconcile_status "$SERVICE"
@@ -229,5 +231,6 @@ service_url() {
   local SERVICE_DNS_HOSTNAME="$(service_dns_hostname "$SERVICE")"
   local DATABASE_NAME="$(get_database_name "$SERVICE")"
   local PASSWORD="$(service_password "$SERVICE")"
-  echo "$PLUGIN_SCHEME://surrealdb:$PASSWORD@$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}/$DATABASE_NAME"
+  echo "$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}"
+  # echo "$PLUGIN_SCHEME://surrealdb:$PASSWORD@$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}/$DATABASE_NAME"
 }
