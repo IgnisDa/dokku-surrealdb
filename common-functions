@@ -634,10 +634,10 @@ service_link() {
   [[ -n "$SERVICE_QUERYSTRING" ]] && SERVICE_URL="${SERVICE_URL}?${SERVICE_QUERYSTRING}"
   plugn trigger service-action post-link "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
   if [[ "$DOKKU_GLOBAL_FLAGS" == *"--no-restart"* ]] || [[ "$SERVICE_RESTART_APPS" == "false" ]]; then
-    config_set --no-restart "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASSWORD=$PASSWORD"
+    config_set --no-restart "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASS=$PASSWORD"
     dokku_log_verbose "Skipping restart of linked app"
   else
-    config_set "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASSWORD=$PASSWORD"
+    config_set "$APP" "${ALIAS}_URL=$SERVICE_URL" "${ALIAS}_USER=$USER" "${ALIAS}_PASS=$PASSWORD"
   fi
   plugn trigger service-action post-link-complete "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
 }
@@ -990,10 +990,10 @@ service_unlink() {
   [[ -z ${LINK[*]} ]] && dokku_log_fail "Not linked to app $APP"
   plugn trigger service-action post-unlink "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
   if [[ "$DOKKU_GLOBAL_FLAGS" == *"--no-restart"* ]] || [[ "$SERVICE_RESTART_APPS" == "false" ]]; then
-    config_unset --no-restart "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASSWORD"
+    config_unset --no-restart "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASS"
     dokku_log_verbose "Skipping restart of linked app"
   else
-    config_unset "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASSWORD"
+    config_unset "$APP" "${LINK[@]}" "${ALIAS}_USER" "${ALIAS}_PASS"
   fi
   plugn trigger service-action post-unlink-complete "$PLUGIN_COMMAND_PREFIX" "$SERVICE" "$APP"
 }
