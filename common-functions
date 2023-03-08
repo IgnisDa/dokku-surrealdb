@@ -875,6 +875,8 @@ service_port_reconcile_status() {
   if [[ ! -s "$PORT_FILE" ]]; then
     if "$DOCKER_BIN" container inspect "$EXPOSED_NAME" >/dev/null 2>&1; then
       "$DOCKER_BIN" container stop "$EXPOSED_NAME" >/dev/null 2>&1 || true
+      "$DOCKER_BIN" network disconnect "$EXPOSED_NAME" "$SERVICE_NAME"
+      "$DOCKER_BIN" network rm "$EXPOSED_NAME" >/dev/null 2>&1 || true
       suppress_output "$DOCKER_BIN" container rm "$EXPOSED_NAME"
       return $?
     fi
@@ -891,16 +893,17 @@ service_port_reconcile_status() {
   fi
 
   # create a docker network
-  "$DOCKER_BIN" network create "$EXPOSED_NAME"
+  "$DOCKER_BIN" network create "$EXPOSED_NAME" >/dev/null
   # connect both containers together
 
   # first the actual container
   "$DOCKER_BIN" network connect "$EXPOSED_NAME" "$SERVICE_NAME"
 
+  # then the ambassador container
   # shellcheck disable=SC2207
   PORTS=($(cat "$PORT_FILE"))
   # shellcheck disable=SC2046
-  "$DOCKER_BIN" container run -d --network "$EXPOSED_NAME" --name "$EXPOSED_NAME" $(docker_ports_options "${PORTS[@]}") --restart always --label dokku=ambassador --label "dokku.ambassador=$PLUGIN_COMMAND_PREFIX" "$PLUGIN_AMBASSADOR_IMAGE" "$SERVICE_NAME" "$PORTS" >/dev/null
+  "$DOCKER_BIN" container run -d --network "$EXPOSED_NAME" --name "$EXPOSED_NAME" $(docker_ports_options "${PORTS[@]}") --restart always --label dokku=ambassador --label "dokku.ambassador=$PLUGIN_COMMAND_PREFIX" "$PLUGIN_AMBASSADOR_IMAGE" "$SERVICE_NAME" "$PLUGIN_DATASTORE_PORTS" >/dev/null
 }
 
 service_promote() {
