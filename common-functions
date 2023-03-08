@@ -890,10 +890,17 @@ service_port_reconcile_status() {
     return $?
   fi
 
+  # create a docker network
+  "$DOCKER_BIN" network create "$EXPOSED_NAME"
+  # connect both containers together
+
+  # first the actual container
+  "$DOCKER_BIN" network connect "$EXPOSED_NAME" "$SERVICE_NAME"
+
   # shellcheck disable=SC2207
   PORTS=($(cat "$PORT_FILE"))
   # shellcheck disable=SC2046
-  "$DOCKER_BIN" container run -d --link "$SERVICE_NAME:$PLUGIN_COMMAND_PREFIX" --name "$EXPOSED_NAME" $(docker_ports_options "${PORTS[@]}") --restart always --label dokku=ambassador --label "dokku.ambassador=$PLUGIN_COMMAND_PREFIX" "$PLUGIN_AMBASSADOR_IMAGE" >/dev/null
+  "$DOCKER_BIN" container run -d --network "$EXPOSED_NAME" --name "$EXPOSED_NAME" $(docker_ports_options "${PORTS[@]}") --restart always --label dokku=ambassador --label "dokku.ambassador=$PLUGIN_COMMAND_PREFIX" "$PLUGIN_AMBASSADOR_IMAGE" "$SERVICE_NAME" "$PORTS" >/dev/null
 }
 
 service_promote() {
