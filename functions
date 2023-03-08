@@ -14,11 +14,13 @@ service_connect() {
   local SERVICE="$1"
   local SERVICE_ROOT="$PLUGIN_DATA_ROOT/$SERVICE"
   local SERVICE_NAME="$(get_service_name "$SERVICE")"
-  local DATABASE_NAME="$(get_database_name "$SERVICE")"
+  local PASSWORD="$(service_password "$SERVICE")"
+  local USER="$(service_user "$SERVICE")"
   local SERVICE_TTY_OPTS
   has_tty && SERVICE_TTY_OPTS="-t"
 
-  "$DOCKER_BIN" container exec -i $SERVICE_TTY_OPTS "$SERVICE_NAME" sql
+  "$DOCKER_BIN" container exec -i $SERVICE_TTY_OPTS "$SERVICE_NAME" \
+    /surreal sql --conn "http://0.0.0.0:8000" --user "$USER" --pass "$PASSWORD"
 }
 
 service_create() {
