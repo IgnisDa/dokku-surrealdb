@@ -47,7 +47,7 @@ jobs:
             fi
           fi
       - run: make test
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: tmp/test-results
@@ -89,7 +89,7 @@ jobs:
             fi
           fi
       - run: make test
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: tmp/test-results
