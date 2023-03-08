@@ -30,7 +30,6 @@ surrealdb:clone <service> <new-service> [--clone-flags...] # create container <n
 surrealdb:connect <service>                        # connect to the service via the surrealdb connection tool
 surrealdb:create <service> [--create-flags...]     # create a surrealdb service
 surrealdb:destroy <service> [-f|--force]           # delete the surrealdb service/data/container if there are no links left
-surrealdb:enter <service>                          # enter or run a command in a running surrealdb service container
 surrealdb:exists <service>                         # check if the surrealdb service exists
 surrealdb:export <service>                         # export a dump of the surrealdb service database
 surrealdb:expose <service> <ports...>              # expose a surrealdb service on custom host:port if provided (random port on the 0.0.0.0 interface if otherwise unspecified)
@@ -298,27 +297,6 @@ Connect to the service via the surrealdb connection tool:
 
 ```shell
 dokku surrealdb:connect lollipop
-```
-
-### enter or run a command in a running surrealdb service container
-
-```shell
-# usage
-dokku surrealdb:enter <service>
-```
-
-A bash prompt can be opened against a running service. Filesystem changes will not be saved to disk.
-
-> NOTE: disconnecting from ssh while running this command may leave zombie processes due to moby/moby#9098
-
-```shell
-dokku surrealdb:enter lollipop
-```
-
-You may also run a command directly against the service. Filesystem changes will not be saved to disk.
-
-```shell
-dokku surrealdb:enter lollipop touch /tmp/test
 ```
 
 ### expose a surrealdb service on custom host:port if provided (random port on the 0.0.0.0 interface if otherwise unspecified)

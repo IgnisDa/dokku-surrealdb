@@ -477,21 +477,6 @@ service_dns_hostname() {
   echo "$SERVICE_NAME" | tr ._ -
 }
 
-service_enter() {
-  declare desc="enter running app container of specified proc type"
-  declare SERVICE="$1" && shift 1
-  local SERVICE_ROOT="$PLUGIN_DATA_ROOT/$SERVICE"
-  local ID="$(cat "$SERVICE_ROOT/ID")"
-
-  "$DOCKER_BIN" container inspect "$ID" >/dev/null 2>&1 || dokku_log_fail "Service container does not exist"
-  is_container_status "$ID" "Running" || dokku_log_fail "Service container is not running"
-
-  local EXEC_CMD=""
-  has_tty && local DOKKU_RUN_OPTS+=" -i -t"
-  # shellcheck disable=SC2086
-  "$DOCKER_BIN" container exec $DOKKU_RUN_OPTS $ID $EXEC_CMD "${@:-/bin/bash}"
-}
-
 service_exists() {
   declare desc="returns 0 or 1 depending on whether service exists or not"
   declare SERVICE="$1"

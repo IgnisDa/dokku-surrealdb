@@ -20,8 +20,7 @@ service-enter-cmd() {
   declare SERVICE="$1"
 
   verify_service_name "$SERVICE"
-  dokku_log_info1_quiet "Filesystem changes may not persist after container restarts"
-  service_enter "$SERVICE" "${@:2}"
+  dokku_log_fail "Not yet implemented since the base image is distroless (https://github.com/GoogleContainerTools/distroless)"
 }
 
 service-enter-cmd "$@"
