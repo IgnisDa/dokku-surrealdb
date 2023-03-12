@@ -527,6 +527,8 @@ service_info() {
   local SERVICE_URL=$(service_url "$SERVICE")
   local PORT_FILE="$SERVICE_ROOT/PORT"
   local SERVICE_CONTAINER_ID="$(cat "$SERVICE_ROOT/ID")"
+  local USER="$(service_user "$SERVICE")"
+  local PASSWORD="$(service_password "$SERVICE")"
   local flag key valid_flags
 
   local flag_map=(
@@ -534,6 +536,8 @@ service_info() {
     "--config-options: $(cat "$SERVICE_ROOT/CONFIG_OPTIONS" 2>/dev/null || true)"
     "--data-dir: ${SERVICE_ROOT}/data"
     "--dsn: ${SERVICE_URL}"
+    "--user: ${USER}"
+    "--password: ${PASSWORD}"
     "--exposed-ports: $(service_exposed_ports "$SERVICE")"
     "--id: ${SERVICE_CONTAINER_ID}"
     "--internal-ip: $(get_container_ip "${SERVICE_CONTAINER_ID}")"
