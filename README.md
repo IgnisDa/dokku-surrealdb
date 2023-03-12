@@ -11,7 +11,7 @@ Unofficial surrealdb plugin for dokku. Currently defaults to installing [surreal
 
 ```shell
 # on 0.19.x+
-sudo dokku plugin:install https://github.com/dokku/dokku-surrealdb.git surrealdb
+sudo dokku plugin:install https://github.com/ignisda/dokku-surrealdb.git surrealdb
 ```
 
 ## Commands
