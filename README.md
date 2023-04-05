@@ -578,20 +578,18 @@ dokku surrealdb:export <service>
 By default, datastore output is exported to stdout:
 
 ```shell
-dokku surrealdb:export lollipop
+dokku surrealdb:export lollipop --ns myapp --db mydb
 ```
 
 You can redirect this output to a file:
 
 ```shell
-dokku surrealdb:export lollipop > data.dump
+dokku surrealdb:export lollipop --ns myapp --db mydb > data.dump
 ```
 
-Note that the export will result in a file containing the binary surrealdb export data. It can be converted to plain text using `pg_restore` as follows
-
-```shell
-pg_restore data.dump -f plain.sql
-```
+Note that the export option requires additional arguments to work correctly. All arguments
+are passed as it is to the service. Please take a look at the Surrealdb export
+[documentation](https://surrealdb.com/docs/cli/export) to see the other available options.
 
 ### Backups
 

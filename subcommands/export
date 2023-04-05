@@ -7,9 +7,9 @@ source "$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")/functions"
 
 service-export-cmd() {
   #E by default, datastore output is exported to stdout
-  #E dokku $PLUGIN_COMMAND_PREFIX:export lollipop
+  #E dokku $PLUGIN_COMMAND_PREFIX:export lollipop --ns myapp --db mydb
   #E you can redirect this output to a file
-  #E dokku $PLUGIN_COMMAND_PREFIX:export lollipop > data.dump
+  #E dokku $PLUGIN_COMMAND_PREFIX:export lollipop --ns myapp --db mydb > data.dump
   #A service, service to run command against
   declare desc="export a dump of the $PLUGIN_SERVICE service database"
   local cmd="$PLUGIN_COMMAND_PREFIX:export" argv=("$@")
@@ -19,7 +19,7 @@ service-export-cmd() {
 
   [[ -z "$SERVICE" ]] && dokku_log_fail "Please specify a valid name for the service"
   verify_service_name "$SERVICE"
-  service_export "$SERVICE"
+  service_export "$SERVICE" "${@:2}"
 }
 
 service-export-cmd "$@"

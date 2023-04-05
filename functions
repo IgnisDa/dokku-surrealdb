@@ -170,9 +170,13 @@ service_export() {
   local SERVICE_NAME="$(get_service_name "$SERVICE")"
   local DATABASE_NAME="$(get_database_name "$SERVICE")"
   local PASSWORD="$(service_password "$SERVICE")"
+  local USER="$(service_user "$SERVICE")"
 
   [[ -n $SSH_TTY ]] && stty -opost
-  "$DOCKER_BIN" container exec "$SERVICE_NAME" env PGPASSWORD="$PASSWORD" pg_dump -Fc --no-acl --no-owner -h localhost -U surrealdb -w "$DATABASE_NAME"
+  "$DOCKER_BIN" container exec "$SERVICE_NAME" /surreal \
+    export --conn "http://0.0.0.0:8000" \
+    --user "$USER" --pass "$PASSWORD" \
+    "${@:2}" -
   status=$?
   [[ -n $SSH_TTY ]] && stty opost
   exit $status

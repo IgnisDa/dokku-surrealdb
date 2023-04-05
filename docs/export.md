@@ -1,5 +1,4 @@
-Note that the export will result in a file containing the binary surrealdb export data. It can be converted to plain text using `pg_restore` as follows
-
-```shell
-pg_restore data.dump -f plain.sql
-```
+Note that the export subcommand requires additional arguments to work correctly. All
+arguments are passed as-it-is to the service. Please take a look at the Surrealdb export
+[documentation](https://surrealdb.com/docs/cli/export) to see the other available
+arguments.
